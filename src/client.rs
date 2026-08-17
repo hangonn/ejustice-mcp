@@ -283,6 +283,10 @@ impl EjusticeClient {
             .await
             .map_err(|err| format!("[Stream] Failed to read document body from {url}: {err}"))?;
 
+        if bytes.is_empty() {
+            return Ok(None);
+        }
+
         Ok(Some(DocumentBytes {
             bytes,
             content_type,

@@ -61,7 +61,9 @@ pub struct MCPGetCaseSectionRequest {
 pub struct MCPFetchDocumentRequest {
     #[schemars(
         description = "The document's file ID - the `fileId` field on a row from the \
-        'documents' section returned by search_case or get_case_section."
+        'documents' section returned by search_case or get_case_section. This is a long hex \
+        string (e.g. '350a0adf36b646db88b56fe18b05096b'). Do NOT use the row's `id` field \
+        (a short numeric value, e.g. '1611669') - that will not resolve to a file."
     )]
     pub file_id: String,
 }
@@ -146,13 +148,31 @@ impl EjusticeMcpServer {
     }
 
     #[tool(
-        description = "Download a specific court document (PDF, affidavit, etc.) using its file ID. \
-        The file ID can be found in the `fileId` field of a row in the 'documents' section."
+        description = "Download a specific court document (PDF, affidavit, etc.) from the eJustice \
+        portal using its file ID.\n\n\
+        IMPORTANT: Use the `fileId` field (a long hex string, e.g. \
+        '350a0adf36b646db88b56fe18b05096b'), NOT the `id` field (a short numeric row ID, e.g. \
+        '1611669'). Both appear on each row in the 'documents' section returned by search_case / \
+        get_case_section, but only `fileId` will resolve to an actual file. Passing the numeric \
+        `id` will fail."
     )]
     async fn fetch_document(
         &self,
         Parameters(MCPFetchDocumentRequest { file_id }): Parameters<MCPFetchDocumentRequest>,
     ) -> Result<CallToolResult, ErrorData> {
+        // fileId is a 32-char hex string; catch the common mistake of passing the numeric `id` instead.
+        if file_id.chars().all(|c| c.is_ascii_digit()) && file_id.len() <= 10 {
+            return Err(ErrorData::invalid_params(
+                format!(
+                    "'{file_id}' is a short numeric value, which suggests you passed a document \
+                    row `id` instead of a `fileId`. `fileId` is a longer hex string (e.g. \
+                    '350a0adf36b646db88b56fe18b05096b'). Copy it from the `fileId` field of a row \
+                    in the documents section."
+                ),
+                None,
+            ));
+        }
+
         match self.client.fetch_document(&file_id).await {
             Ok(Some(doc)) => {
                 let name = doc
@@ -168,11 +188,13 @@ impl EjusticeMcpServer {
                     doc.content_type
                 );
 
-                let uri = format!("ejustice-document:///{file_id}");
+                let uri = format!("ejustice-document://{file_id}");
 
                 Ok(CallToolResult::success(vec![
                     ContentBlock::text(summary),
-                    ContentBlock::resource(ResourceContents::blob(blob, uri)),
+                    ContentBlock::resource(
+                        ResourceContents::blob(blob, uri).with_mime_type(doc.content_type),
+                    ),
                 ]))
             }
             Ok(None) => Ok(CallToolResult::error(vec![ContentBlock::text(format!(
