@@ -1,6 +1,6 @@
 # Namibia eJustice MCP Server
 
-An advanced, production-ready **Model Context Protocol (MCP)** server written in Rust. It bridges AI agents (like Claude Desktop, Cursor, and Cline) with the **Namibia eJustice public portal** (`ejustice.jud.na`), allowing them to search court cases, extract dynamic grid data, and download legal documents securely and efficiently.
+A **Model Context Protocol (MCP)** server, written in Rust, that gives AI agents — Claude Desktop, Cursor, Cline, or any other MCP-compatible client — direct access to the **Namibia eJustice public portal** (`ejustice.jud.na`). It searches court cases, pulls the full structured case record, and downloads filed documents, through tool calls instead of manual browsing.
 
 ## Available MCP Tools
 
@@ -14,57 +14,33 @@ An advanced, production-ready **Model Context Protocol (MCP)** server written in
 
 ## Quick Start
 
-### Prerequisites
-*   [Rust](https://www.rust-lang.org/tools/install), a reasonably current **stable** toolchain (`rustup update` if you're on a distro-packaged `rustc` — this crate's dependencies need 2024-edition support)
-*   An MCP-compatible client (Claude Desktop, Cursor, Cline, etc.)
+You'll need an MCP-compatible client — Claude Desktop, Cursor, Cline, or similar.
 
-### 1. Build the Server
-Clone the repository and build the release binary:
+### 1. Get the server
+
+**Option A — Download a prebuilt binary (fastest, no Rust required)**
+Grab the build for your OS — Windows, macOS, or Linux — from the [Releases page](https://github.com/hangonn/ejustice-mcp/releases).
+
+**Option B — Build from source**
+Requires [Rust](https://www.rust-lang.org/tools/install), a reasonably current **stable** toolchain (`rustup update` if you're on a distro-packaged `rustc` — this crate's dependencies need 2024-edition support).
 
 ```bash
-git clone https://github.com/yourusername/ejustice-mcp.git
+git clone https://github.com/hangonn/ejustice-mcp.git
 cd ejustice-mcp
 cargo build --release --bin ejustice-mcp
 ```
 *The compiled binary will be at `target/release/ejustice-mcp` (or `.exe` on Windows).*
 
-### 2. Configure your MCP Client
-Add the server to your MCP client's configuration file.
+### 2. Configure your MCP client
+Add the server to your MCP client's configuration file, pointing `command` at wherever your binary ended up — the one you downloaded, or `target/release/ejustice-mcp` if you built from source.
 
 **For Claude Desktop** (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
     "ejustice": {
-      "command": "/absolute/path/to/ejustice-mcp/target/release/ejustice-mcp",
+      "command": "/absolute/path/to/ejustice-mcp",
       "args": []
-    }
-  }
-}
-```
-
-**For Cursor** (`.cursor/mcp.json`):
-```json
-{
-  "mcpServers": {
-    "ejustice": {
-      "command": "/absolute/path/to/ejustice-mcp/target/release/ejustice-mcp",
-      "args": []
-    }
-  }
-}
-```
-*(Make sure to replace `/absolute/path/to/...` with the actual path to your compiled binary!)*
-
-### 3. (Optional) Point it at a different eJustice instance
-The server defaults to `https://ejustice.jud.na/ejustice`. Override it with `EJUSTICE_BASE_URL`, e.g. in the client config:
-```json
-{
-  "mcpServers": {
-    "ejustice": {
-      "command": "/absolute/path/to/ejustice-mcp/target/release/ejustice-mcp",
-      "args": [],
-      "env": { "EJUSTICE_BASE_URL": "https://ejustice.jud.na/ejustice" }
     }
   }
 }
