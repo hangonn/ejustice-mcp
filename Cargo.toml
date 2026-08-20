@@ -3,7 +3,7 @@ resolver = "2"
 members = ["ejustice-mcp-core", "ejustice-mcp-local"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.2.0"
 edition = "2024"
 authors = ["Hango Ndeyapo <nnhango@protonmail.com>"]
 description = "MCP server for Namibia's public eJustice case search (ejustice.jud.na): search cases, pull grid sections, and fetch documents."
