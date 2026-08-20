@@ -1,6 +1,6 @@
 # eJustice MCP
 
-A **Model Context Protocol (MCP)** server that connects AI agents, including ChatGPT Desktop, Claude Desktop, Goose, and other MCP-compatible clients, to the **Namibia eJustice public portal** (`ejustice.jud.na`). Search for a case by its exact case number, retrieve structured case details and individual sections, and access filed documents through MCP resource links. It turns the portal into a focused interface for legal research without requiring manual browsing.
+A [**Model Context Protocol (MCP)**](https://modelcontextprotocol.io/docs/getting-started/intro) server that connects AI agents, including ChatGPT Desktop, Claude Desktop, Goose, and other MCP-compatible clients, to the **Namibia eJustice public portal** (`ejustice.jud.na`). Search for a case by its exact case number, retrieve structured case details and individual sections, and access filed documents through MCP resource links. It turns the portal into a focused interface for legal research without requiring manual browsing.
 
 ## Available MCP Tools
 
