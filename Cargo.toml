@@ -12,7 +12,7 @@ repository = "https://github.com/hangonn/ejustice-mcp"
 readme = "README.md"
 keywords = ["mcp", "ejustice", "namibia", "legal", "scraper"]
 categories = ["command-line-utilities", "web-programming::http-client"]
-rust-version = "1.97"
+rust-version = "1.96"
 
 [workspace.dependencies]
 rmcp = { version = "3.1.2", features = ["server", "macros"] }
