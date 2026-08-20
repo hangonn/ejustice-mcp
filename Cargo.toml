@@ -1,32 +1,22 @@
-[package]
-name = "ejustice-mcp"
+[workspace]
+resolver = "2"
+members = ["ejustice-mcp-core", "ejustice-mcp-local"]
+
+[workspace.package]
 version = "0.1.1"
 edition = "2024"
 authors = ["Hango Ndeyapo <nnhango@protonmail.com>"]
 description = "MCP server for Namibia's public eJustice case search (ejustice.jud.na): search cases, pull grid sections, and fetch documents."
-license = "MIT"
+license = "BSD-3-Clause"
 repository = "https://github.com/hangonn/ejustice-mcp"
 readme = "README.md"
 keywords = ["mcp", "ejustice", "namibia", "legal", "scraper"]
 categories = ["command-line-utilities", "web-programming::http-client"]
-rust-version = "1.88"
+rust-version = "1.97"
 
-[dependencies]
-base64 = "0.22"
-bytes = "1.12.1"
-rmcp = { version = "3.1.2", features = ["server", "macros", "transport-io"] }
+[workspace.dependencies]
+rmcp = { version = "3.1.2", features = ["server", "macros"] }
 tokio = { version = "1.53", features = ["full"] }
-regex = "1"
-reqwest = { version = "0.13", features = [
-    "json",
-    "cookies",
-    "form",
-    "hickory-dns",
-] }
-ego-tree = "0.11.0"
-scraper = "0.27.0"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = [
     "env-filter",
@@ -34,6 +24,8 @@ tracing-subscriber = { version = "0.3", features = [
     "fmt",
 ] }
 
+[workspace.lints.clippy]
+all = { level = "warn" }
 
 [profile.release]
 opt-level = 3

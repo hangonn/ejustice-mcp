@@ -1,0 +1,23 @@
+[package]
+name = "ejustice-mcp-local"
+description = "Local stdio MCP server for Namibia eJustice."
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+rust-version.workspace = true
+
+
+[dependencies]
+ejustice-mcp-core = { path = "../ejustice-mcp-core" }
+rmcp = { workspace = true, features = ["transport-io"] }
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+[lints]
+workspace = true
